@@ -1,8 +1,8 @@
 import { createClient } from "@/utils/supabase/server"
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
-import Email from "@/components/settings/Email"
 import Loading from "@/app/loading"
+import Email from "@/components/settings/Email"
 
 const EmailPage = async () => {
   const supabase = await createClient()
