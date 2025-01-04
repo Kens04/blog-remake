@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { BlogType } from "@/types";
 import { format } from "date-fns";
 import { FilePenLine, Loader2, Trash2 } from "lucide-react";
+import { deleteBlog } from "@/actions/blog";
 import FormError from "@/components/auth/FormError";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,7 +27,35 @@ const BlogDetail = ({ blog, isMyBlog }: BlogDetailProps) => {
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
-  const handleDelete = async () => {};
+  const handleDelete = async () => {
+    if (!window.confirm("本当に削除しますか？")) {
+      return;
+    }
+
+    setError("");
+
+    startTransition(async () => {
+      try {
+        const res = await deleteBlog({
+          blogId: blog.id,
+          imageUrl: blog.image_url,
+          userId: blog.user_id,
+        });
+
+        if (res?.error) {
+          setError(res.error);
+          return;
+        }
+
+        toast.success("ブログを削除しました");
+        router.push("/");
+        router.refresh();
+      } catch (error) {
+        console.error(error);
+        setError("エラーが発生しました");
+      }
+    });
+  };
 
   return (
     <div className="grid grid-cols-3 gap-5">
