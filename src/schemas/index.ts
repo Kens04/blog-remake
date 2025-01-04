@@ -40,3 +40,8 @@ export const PasswordSchema = z
     message: "新しいパスワードと確認用パスワードが一致しません。",
     path: ["confirmation"], // エラーメッセージが適用されるフィールド
   });
+
+export const ProfileSchema = z.object({
+  name: z.string().min(1, { message: "お名前を入力してください" }),
+  introduce: z.string().optional(),
+});
