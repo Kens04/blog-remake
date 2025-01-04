@@ -45,3 +45,9 @@ export const ProfileSchema = z.object({
   name: z.string().min(1, { message: "お名前を入力してください" }),
   introduce: z.string().optional(),
 });
+
+export const EmailSchema = z.object({
+  email: z.string().email({
+    message: "メールアドレスを入力してください",
+  }),
+});

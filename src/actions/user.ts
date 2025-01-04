@@ -1,6 +1,6 @@
 "use server";
 
-import { ProfileSchema } from "@/schemas";
+import { EmailSchema, ProfileSchema } from "@/schemas";
 import { createClient } from "@/utils/supabase/server";
 import { z } from "zod";
 import { v4 as uuidv4 } from "uuid";
@@ -75,6 +75,33 @@ export const updateProfile = async (values: updateProfileProps) => {
     // エラーチェック
     if (updateError) {
       return { error: updateError.message };
+    }
+  } catch (err) {
+    console.error(err);
+    return { error: "エラーが発生しました" };
+  }
+};
+
+// メールアドレス変更
+export const updateEmail = async (values: z.infer<typeof EmailSchema>) => {
+  try {
+    const supabase = await createClient();
+
+    // メールアドレス変更メールを送信
+    const { error: updateUserError } = await supabase.auth.updateUser(
+      { email: values.email },
+      { emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/email/verify` }
+    );
+
+    if (updateUserError) {
+      return { error: updateUserError.message };
+    }
+
+    // ログアウト
+    const { error: signOutError } = await supabase.auth.signOut();
+
+    if (signOutError) {
+      return { error: signOutError.message };
     }
   } catch (err) {
     console.error(err);
