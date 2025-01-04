@@ -51,3 +51,8 @@ export const EmailSchema = z.object({
     message: "メールアドレスを入力してください",
   }),
 });
+
+export const BlogSchema = z.object({
+  title: z.string().min(1, { message: "タイトルを入力してください" }),
+  content: z.string().min(1, { message: "内容を入力してください" }),
+});
